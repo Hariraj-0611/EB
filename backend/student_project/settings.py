@@ -2,6 +2,9 @@
 Django settings for student_project.
 """
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
 import os
 from pathlib import Path
 from datetime import timedelta
