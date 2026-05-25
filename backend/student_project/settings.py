@@ -117,11 +117,10 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS — allow React dev server
+# CORS — allow Vercel frontend
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'http://127.0.0.1:3000',
     'http://localhost:5173',
-    'http://127.0.0.1:5173',
+    'https://edubricz.vercel.app',
 ]
 CORS_ALLOW_CREDENTIALS = True
