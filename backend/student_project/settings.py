@@ -42,6 +42,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
 ]
 
 ROOT_URLCONF = 'student_project.urls'
@@ -75,7 +77,7 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT', '3306'),
         'OPTIONS': {
             'charset': 'utf8mb4',
-            'ssl': {'ssl-mode': 'REQUIRED'},  # required for Aiven MySQL
+            'ssl': {'ca': str(BASE_DIR / 'ca.pem')},  # required for Aiven MySQL
         },
         'CONN_MAX_AGE': 60,
     }
@@ -123,6 +125,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://edubricz.vercel.app',
+    'https://eb-peach.vercel.app/login',
+    'https://your-render-app.onrender.com',  # Add this after deploy
 ]
 CORS_ALLOW_CREDENTIALS = True
