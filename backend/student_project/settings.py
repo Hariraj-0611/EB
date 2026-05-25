@@ -64,7 +64,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'student_project.wsgi.application'
 
-# MySQL Database — credentials loaded from .env
+# MySQL Database — credentials loaded from environment variables
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -75,8 +75,9 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT', '3306'),
         'OPTIONS': {
             'charset': 'utf8mb4',
+            'ssl': {'ssl-mode': 'REQUIRED'},  # required for Aiven MySQL
         },
-        'CONN_MAX_AGE': 60,  # reuse DB connections for 60s — avoids reconnect overhead
+        'CONN_MAX_AGE': 60,
     }
 }
 
@@ -97,6 +98,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Django REST Framework — JWT auth by default
