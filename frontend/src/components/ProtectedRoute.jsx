@@ -1,0 +1,12 @@
+/**
+ * Redirects unauthenticated users to /login.
+ */
+
+import { Navigate } from 'react-router-dom';
+import { isAuthenticated } from '../services/authService';
+
+const ProtectedRoute = ({ children }) => {
+  return isAuthenticated() ? children : <Navigate to="/login" replace />;
+};
+
+export default ProtectedRoute;
