@@ -3,7 +3,7 @@ services:
     name: student-backend
     env: python
     rootDir: backend
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: "pip install --upgrade pip setuptools wheel && pip install -r requirements.txt"
     startCommand: "python manage.py migrate && gunicorn student_project.wsgi --bind 0.0.0.0:$PORT"
     envVars:
       - key: SECRET_KEY
