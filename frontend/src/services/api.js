@@ -6,7 +6,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://student-backend-k0vi.onrender.com/',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://student-backend-k0vi.onrender.com/api',
 });
 
 // Attach JWT token to every request
