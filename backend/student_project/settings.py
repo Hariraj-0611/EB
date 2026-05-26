@@ -148,11 +148,11 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS — allow Vercel frontend
+# CORS — allow frontend origins
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://eb-peach.vercel.app/login',
-    'https://student-backend-k0vi.onrender.com/',  # Add this after deploy
+    'https://eb-peach.vercel.app',
+    'https://student-backend-k0vi.onrender.com',
 ]
 CORS_ALLOW_CREDENTIALS = True
