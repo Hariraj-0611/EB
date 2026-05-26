@@ -152,7 +152,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://eb-peach.vercel.app',
-    'https://your-render-app.onrender.com',  # Add this after deploy
+    'https://eb-peach.vercel.app/login',
+    'https://student-backend-k0vi.onrender.com/',  # Add this after deploy
 ]
 CORS_ALLOW_CREDENTIALS = True
