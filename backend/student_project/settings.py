@@ -2,8 +2,13 @@
 Django settings for student_project.
 """
 
-import pymysql
-pymysql.install_as_MySQLdb()
+try:
+    import importlib
+    pymysql = importlib.import_module('pymysql')
+    pymysql.install_as_MySQLdb()
+except ImportError:
+    # pymysql may not be installed in some environments; fall back gracefully.
+    pass
 
 import os
 from pathlib import Path
@@ -81,22 +86,25 @@ if AIVEN_CA:
             AIVEN_CA_PATH.write_text(AIVEN_CA, encoding='utf-8')
     except Exception:
         AIVEN_CA_PATH = None
+else:
+    ca_fallback = BASE_DIR / 'ca.pem'
+    if ca_fallback.exists():
+        AIVEN_CA_PATH = ca_fallback
 
+# Only enable SSL options when a valid CA file exists
+# Otherwise connect without explicit SSL configuration.
 db_options = {'charset': 'utf8mb4'}
 if AIVEN_CA_PATH:
     db_options['ssl'] = {'ca': str(AIVEN_CA_PATH)}
-else:
-    # fallback to a repo-provided ca.pem if present
-    db_options['ssl'] = {'ca': str(BASE_DIR / 'ca.pem')}
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'student_db'),
-        'USER': os.environ.get('DB_USER', 'root'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'root'),
+        'NAME': os.environ.get('DB_NAME', 'defaultdb'),
+        'USER': os.environ.get('DB_USER', 'avnadmin'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
+        'PORT': os.environ.get('DB_PORT', '19322'),
         'OPTIONS': db_options,
         'CONN_MAX_AGE': 60,
     }
@@ -144,7 +152,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://eb-peach.vercel.app/login',
+    'https://eb-peach.vercel.app',
     'https://your-render-app.onrender.com',  # Add this after deploy
 ]
 CORS_ALLOW_CREDENTIALS = True

@@ -4,7 +4,7 @@ services:
     env: python
     rootDir: backend
     buildCommand: "pip install --upgrade pip setuptools wheel && pip install -r requirements.txt"
-    startCommand: "python manage.py migrate && gunicorn student_project.wsgi --bind 0.0.0.0:$PORT"
+    startCommand: "python manage.py migrate && gunicorn student_project.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: SECRET_KEY
         value: django-insecure-change-this-to-a-random-string
