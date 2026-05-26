@@ -70,6 +70,25 @@ TEMPLATES = [
 WSGI_APPLICATION = 'student_project.wsgi.application'
 
 # MySQL Database — credentials loaded from environment variables
+# Support writing the Aiven CA PEM from the `AIVEN_CA` env var at runtime
+AIVEN_CA = os.environ.get('AIVEN_CA')
+AIVEN_CA_PATH = None
+if AIVEN_CA:
+    try:
+        AIVEN_CA_PATH = BASE_DIR / 'aiven-ca.pem'
+        # write the PEM file if it does not exist or content differs
+        if not AIVEN_CA_PATH.exists() or AIVEN_CA_PATH.read_text(encoding='utf-8') != AIVEN_CA:
+            AIVEN_CA_PATH.write_text(AIVEN_CA, encoding='utf-8')
+    except Exception:
+        AIVEN_CA_PATH = None
+
+db_options = {'charset': 'utf8mb4'}
+if AIVEN_CA_PATH:
+    db_options['ssl'] = {'ca': str(AIVEN_CA_PATH)}
+else:
+    # fallback to a repo-provided ca.pem if present
+    db_options['ssl'] = {'ca': str(BASE_DIR / 'ca.pem')}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -78,10 +97,7 @@ DATABASES = {
         'PASSWORD': os.environ.get('DB_PASSWORD', 'root'),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '3306'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'ssl': {'ca': str(BASE_DIR / 'ca.pem')},  # required for Aiven MySQL
-        },
+        'OPTIONS': db_options,
         'CONN_MAX_AGE': 60,
     }
 }
