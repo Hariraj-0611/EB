@@ -7,7 +7,6 @@ try:
     pymysql = importlib.import_module('pymysql')
     pymysql.install_as_MySQLdb()
 except ImportError:
-    # pymysql may not be installed in some environments; fall back gracefully.
     pass
 
 import os
@@ -16,7 +15,6 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load .env before anything else
 try:
     from dotenv import load_dotenv
     load_dotenv(BASE_DIR / '.env', override=True)
@@ -73,14 +71,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'student_project.wsgi.application'
 
-# MySQL Database — credentials loaded from environment variables
-# Support writing the Aiven CA PEM from the `AIVEN_CA` env var at runtime
 AIVEN_CA = os.environ.get('AIVEN_CA')
 AIVEN_CA_PATH = None
 if AIVEN_CA:
     try:
         AIVEN_CA_PATH = BASE_DIR / 'aiven-ca.pem'
-        # write the PEM file if it does not exist or content differs
         if not AIVEN_CA_PATH.exists() or AIVEN_CA_PATH.read_text(encoding='utf-8') != AIVEN_CA:
             AIVEN_CA_PATH.write_text(AIVEN_CA, encoding='utf-8')
     except Exception:
@@ -90,8 +85,6 @@ else:
     if ca_fallback.exists():
         AIVEN_CA_PATH = ca_fallback
 
-# Only enable SSL options when a valid CA file exists
-# Otherwise connect without explicit SSL configuration.
 db_options = {'charset': 'utf8mb4'}
 if AIVEN_CA_PATH:
     db_options['ssl'] = {'ca': str(AIVEN_CA_PATH)}
@@ -109,8 +102,6 @@ DATABASES = {
     }
 }
 
-# Faster password hasher — custom subclass with reduced iterations
-# Default Django PBKDF2 uses 720,000 iterations (~2s). 260,000 = ~0.3s, still secure for dev.
 PASSWORD_HASHERS = [
     'students.hashers.FastPBKDF2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -129,7 +120,6 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Django REST Framework — JWT auth by default
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -139,7 +129,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-# Simple JWT — 24h access token
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
@@ -147,7 +136,6 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS — allow frontend origins
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:5173',
