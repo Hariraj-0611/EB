@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+const API = import.meta.env.VITE_API_BASE_URL || 'https://student-backend-k0vi.onrender.com/api';
 
 const BG_STYLE = {
   backgroundImage: `url('https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=1600&auto=format&fit=crop')`,
