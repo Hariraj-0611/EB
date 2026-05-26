@@ -153,6 +153,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:5173',
     'https://eb-peach.vercel.app',
+    'https://eb-davqoigvl-hariraj-ps-projects.vercel.app',
     'https://student-backend-k0vi.onrender.com',
 ]
 CORS_ALLOW_CREDENTIALS = True
